@@ -1,17 +1,15 @@
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-public class Main3 {
-    public static void main(String[] args) throws NoSuchMethodException {
-        Class<TestAbstract> manager = TestAbstract.class;
+public class Descriptor {
 
-        Package aPackage = manager.getPackage();
+    public void discribe(Class clazz) {
+        Package aPackage = clazz.getPackage();
         System.out.printf("package %s;%n", aPackage.getName());
 
-        int modifiers = manager.getModifiers(); // 101010101
+        int modifiers = clazz.getModifiers(); // 101010101
 //        Modifier
 //        modifiers = 1; // 00001
 //        modifiers = 3; // 00011
@@ -21,12 +19,12 @@ public class Main3 {
 //        System.out.println(Modifier.toString(modifiers));
 
         System.out.printf("%s %s %s", Modifier.toString(modifiers),
-                manager.isInterface() ? "interface" : "class", manager.getSimpleName());
+                clazz.isInterface() ? "interface" : "class", clazz.getSimpleName());
 
-        System.out.printf(" extends %s", manager.getSuperclass().getSimpleName());
+        System.out.printf(" extends %s", clazz.getSuperclass().getSimpleName());
 
         System.out.printf(" implements ");
-        Class<?>[] interfaces = manager.getInterfaces();
+        Class<?>[] interfaces = clazz.getInterfaces();
         for (int i = 0; i < interfaces.length; i++) {
             Class<?> anInterface = interfaces[i];
             System.out.print(i == 0 ? "" : ", ");
@@ -34,7 +32,7 @@ public class Main3 {
         }
         System.out.println(" {");
 
-        Field[] fields = manager.getDeclaredFields();
+        Field[] fields = clazz.getDeclaredFields();
 
         for (Field field : fields) {
             System.out.printf("\t%s %s %s;%n", Modifier.toString(field.getModifiers()), field.getType().getSimpleName(), field.getName());
@@ -42,21 +40,21 @@ public class Main3 {
 
         System.out.println();
 
-        Constructor<?>[] declaredConstructors = manager.getDeclaredConstructors();
+        Constructor<?>[] declaredConstructors = clazz.getDeclaredConstructors();
         for (Constructor<?> constructor : declaredConstructors) {
             System.out.printf("\t%s %s(%s) {}%n",
                     Modifier.toString(constructor.getModifiers()),
-                    manager.getSimpleName(),
+                    clazz.getSimpleName(),
                     getParameters(constructor.getParameterTypes()));
         }
 
         System.out.println();
 
-        Method[] methods = manager.getDeclaredMethods();
+        Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             System.out.printf("\t%s %s(%s) {}%n",
                     Modifier.toString(method.getModifiers()),
-                    manager.getSimpleName(),
+                    clazz.getSimpleName(),
                     getParameters(method.getParameterTypes()));
         }
 
