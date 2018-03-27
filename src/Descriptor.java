@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public class Descriptor {
+    private Class clazz;
 
     /**
      * describe class including fields, constructors and methods
@@ -11,27 +12,38 @@ public class Descriptor {
      * @param clazz which will be described
      */
     public void describe(Class clazz) {
+        this.clazz = clazz;
+
+        showPackage();
+        showModifiers();
+        showSuperclasses();
+        showInterfaces();
+        showFields();
+        showConstructors();
+        showMethods();
+    }
+
+    private void showPackage() {
         Package aPackage = clazz.getPackage();
         System.out.printf("package %s;%n", aPackage.getName());
+    }
 
-        int modifiers = clazz.getModifiers(); // 101010101
-//        Modifier
-//        modifiers = 1; // 00001
-//        modifiers = 3; // 00011
-//        modifiers = 5; // 00101
-//        System.out.println(Modifier.isPublic(modifiers));
-//        System.out.println(Modifier.isPrivate(modifiers));
-//        System.out.println(Modifier.toString(modifiers));
+    private void showModifiers() {
+        int modifiers = clazz.getModifiers();
 
         System.out.printf("%s %s %s", Modifier.toString(modifiers),
                 clazz.isInterface() ? "interface" : "class", clazz.getSimpleName());
+    }
 
+    private void showSuperclasses() {
         Class superclass = clazz.getSuperclass();
 
         if (!superclass.equals(Object.class)) {
             System.out.printf(" extends %s", superclass.getSimpleName());
         }
+    }
 
+    private void showInterfaces() {
         Class<?>[] interfaces = clazz.getInterfaces();
 
         if (interfaces.length != 0) {
@@ -42,7 +54,9 @@ public class Descriptor {
                 System.out.print(anInterface.getSimpleName());
             }
         }
+    }
 
+    private void showFields() {
         System.out.println(" {");
 
         Field[] fields = clazz.getDeclaredFields();
@@ -53,7 +67,9 @@ public class Descriptor {
         }
 
         System.out.println();
+    }
 
+    private void showConstructors() {
         Constructor<?>[] declaredConstructors = clazz.getDeclaredConstructors();
         for (Constructor<?> constructor : declaredConstructors) {
             System.out.printf("\t%s %s(%s) {}%n",
@@ -63,7 +79,9 @@ public class Descriptor {
         }
 
         System.out.println();
+    }
 
+    private void showMethods() {
         Method[] methods = clazz.getDeclaredMethods();
         for (Method method : methods) {
             System.out.printf("\t%s %s %s(%s) {}%n",
